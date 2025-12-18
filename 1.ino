@@ -1,10 +1,10 @@
-const uint8_t TX_PIN = 8;
-const uint32_t BAUD = 9600;
-const uint16_t BIT_US = 1000000UL / BAUD;
+#define TX_PIN 8
+#define BAUD 9600
+#define BIT_US (1000000 / BAUD)
 
-unsigned long count = 0;
+unsigned long counter = 0;
 
-void sendByte(uint8_t data) {
+void uartSend(char data) {
   digitalWrite(TX_PIN, LOW);
   delayMicroseconds(BIT_US);
 
@@ -22,11 +22,21 @@ void setup() {
   digitalWrite(TX_PIN, HIGH);
 
   Serial.begin(9600);
+  Serial.println("UART Waveform Test");
+  Serial.println("TX: D8, Data: 'a'");
+  Serial.print("Bit Time(us): ");
+  Serial.println(BIT_US);
+
   delay(2000);
 }
 
 void loop() {
-  count++;
-  sendByte(0x61);
+  counter++;
+
+  Serial.print("Send #");
+  Serial.print(counter);
+  Serial.println(" : 'a'");
+
+  uartSend('a');
   delay(500);
 }

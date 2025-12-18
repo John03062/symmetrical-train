@@ -30,8 +30,8 @@ void setup() {
 }
 
 void loop() {
+      Serial.write(0x61);
   swTransmit(0x61);
-  Serial.write(0x61);
 
   delay(2000);
 }
