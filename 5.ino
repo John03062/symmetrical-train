@@ -11,6 +11,9 @@ unsigned long cycles = 0;
 unsigned long passCnt = 0;
 unsigned long errCnt  = 0;
 
+char testChars[] = {'a', 'A', 'Z'};
+uint8_t indexChar = 0;
+
 void softTx(uint8_t b) {
   PIN_LOW();
   delayMicroseconds(TBIT);
@@ -30,19 +33,18 @@ void softTx(uint8_t b) {
 void setup() {
   DDRB |= _BV(TXB);
   PIN_HIGH();
-
   Serial.begin(UART_BAUD);
   delay(2000);
 }
 
 void loop() {
-  uint8_t value = 0x61;
+  uint8_t value = testChars[indexChar];
   cycles++;
 
   Serial.print("#");
   Serial.print(cycles);
   Serial.print(" TX=");
-  Serial.print(value, HEX);
+  Serial.print(value);
   Serial.print(" RX=");
 
   softTx(value);
@@ -50,7 +52,7 @@ void loop() {
 
   if (Serial.available() > 0) {
     uint8_t r = Serial.read();
-    Serial.print(r, HEX);
+    Serial.print(r);
 
     if (r == value) {
       passCnt++;
@@ -73,6 +75,8 @@ void loop() {
     Serial.println(errCnt);
   }
 
+  indexChar++;
+  if (indexChar >= sizeof(testChars)) indexChar = 0;
+
   delay(1000);
 }
-
